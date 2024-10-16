@@ -42,23 +42,21 @@ figure;
 subplot(2, 1, 1); 
 plot(t, y1(t));
 grid on;
-title('s(t-tau1)');
-xlabel('time (s)'); ylabel('amplitude');
+title('Signal from Microphone 1: s(t-tau1)');
+xlabel('Time (s)'); ylabel('Amplitude');
 xlim([tauMin-(0.5e-3), tauMax+(0.5e-3)]);
-
 
 subplot(2, 1, 2);
 plot(t, y2(t));
-title('s(t-tau2)');
+title('Signal from Microphone 2: s(t-tau2)');
 grid on;
-xlabel('time (s)'); ylabel('amplitude');
+xlabel('Time (s)'); ylabel('Amplitude');
 xlim([tauMin-(0.5e-3), tauMax+(0.5e-3)]);
 
 %e test
 % [y1sig, y2sig] = lab1sim(A, B, L, sig);
 % tauMin = min(tau1, tau2);
 % tauMax = max(tau1, tau2);
-
 
 % t = tauMin-(0.5e-3):(1/fsim):tauMax+(0.5e-3);
 % figure;
@@ -71,3 +69,6 @@ xlim([tauMin-(0.5e-3), tauMax+(0.5e-3)]);
 % plot(t, y2sig(t));
 % title('s(t-tau2)');
 % xlabel('time (s)'); ylabel('amplitude');
+
+%lab1est test
+% [theta_est, L_est] = lab1est(A, B, y1(t), y2(t))
