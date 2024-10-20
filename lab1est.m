@@ -8,11 +8,7 @@ function [theta_est, L_est] = lab1est(A, B, y1, y2)
     lag = lags(idx); % Get the lag corresponding to the peak
 
     % Convert lag to time
-    relative_time_shift = lag / 1e6; % Convert from samples to seconds
-
-    % Calculate the delays τ1 and τ2
-    % tau1 = sqrt(B^2 + (100 - A)^2) / c_s; % Assuming L = 100 for the first call
-    % tau2 = sqrt(B^2 + (100 - 2 * A)^2) / c_s; % Assuming L = 100 for the second call
+    relative_time_shift = lag / 1e5; % Convert from samples to seconds
 
     % Calculate relative delay
     relative_delay = min(abs(relative_time_shift) * c_s / A, 1);
@@ -21,5 +17,5 @@ function [theta_est, L_est] = lab1est(A, B, y1, y2)
     theta_est = asin(relative_delay);
 
     % Estimate L
-    L_est = B * tan(theta_est)+A;
+    L_est = B * tan(theta_est)+A; %I added the +A because the angle thing gives us L-A
 end
