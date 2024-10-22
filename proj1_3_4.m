@@ -26,7 +26,7 @@ sig = @(t) 100 * cos(10000 * pi * t) .* (u(t) - u(t - 1));
 % z2a = y2sig(t) + noise2_var1;
 % 
 % %call lab1est which outputs estimated angle and L
-% [~, lHat1] = lab1est(A, B, z1a, z2a);
+% [~, lHat1] = lab1est(A, B, z1a, z2a, 1e5);
 % fprintf('%.10f\n', lHat1);
 % display(["True_L: ", L, "Est_L: " lHat1, "difference: ", abs(L-lHat1) "variance: ", 1]); %every time i run i get the same thing:(
 % 
@@ -41,39 +41,40 @@ sig = @(t) 100 * cos(10000 * pi * t) .* (u(t) - u(t - 1));
 % 
 % % 
 % %call lab1est which outputs estimated angle and L
-% [~, lHat2] = lab1est(A, B, z1b, z2b);
+% [~, lHat2] = lab1est(A, B, z1b, z2b, 1e5);
 % fprintf('%.10f\n', lHat2);
 % display(["True_L: ", L, "Est_L: " lHat2, "difference: ", abs(L-lHat2) "variance: ", 150]);
 
 M = 12;
 N = 100;
+last_alpha = 120;
 % estimates = zeros(N, M); 
-% for alpha = 10:10:120 %for each alpha (it's really the sqrt of alpha right?)
-% 
+% for alpha = 10:10:last_alpha %for each alpha (it's really the sqrt of alpha right?)
+
 %    for n = 1:N
 %         z1 = y1sig(t) + sqrt(alpha)*randn(1, length(t));
 %         z2 = y2sig(t)+ sqrt(alpha)*randn(1, length(t)); 
-%        [~, estimates(n, alpha/10)] = lab1est(A, B, z1, z2); %get the estimated L for each set of noisy responses
+%        [~, estimates(n, alpha/10)] = lab1est(A, B, z1, z2, 1e5); %get the estimated L for each set of noisy responses
 %     end
 % end
-% 
-% save('estimates.mat', 'estimates'); %save it
-data = load('estimates.mat'); %get it
+
+save('estimates2.mat', 'estimates'); %save it
+data = load('estimates2.mat'); %get it
 estimates = data.estimates;
 
 mse_for_relization = zeros(N, M);
 mse_for_alpha = zeros(M, 1); 
-for alpha = 10:10:120 
+for alpha = 10:10:last_alpha 
     mse_for_relization(:, alpha/10) = ((estimates(:, alpha/10)) - L).^2; % am i supposed to multiple by sigma squared?
     mse_for_alpha(alpha/10, 1) = (1/N)*sum(mse_for_relization(:, alpha/10));
 end
 
 figure;
-plot(10:10:120, mse_for_alpha); 
+plot(10:10:last_alpha, mse_for_alpha); 
 xlabel('$\sigma^2$', 'Interpreter', 'latex');
-ylabel('MSE of $\sigma^2$', 'Interpreter', 'latex');
-title('MSE of $\sigma^2$ vs $\sigma^2$', 'Interpreter', 'latex');
-xlim([10, 120]);
+ylabel('Avg MSE of $\sigma^2$', 'Interpreter', 'latex');
+title('Average MSE of $\sigma^2$ vs $\sigma^2$', 'Interpreter', 'latex');
+xlim([10, last_alpha]);
 grid on;
 
 
@@ -81,7 +82,7 @@ standard_dev_per_alpha = zeros(M,1);
 
 % standard_dev_per_alpha = std(mse_for_relization, 0, 1);
 
-for alpha = 10:10:120 
+for alpha = 10:10:last_alpha 
     summation = 0;
     for n = 1:N
         summation = summation + (mse_for_relization(n, alpha/10)-mse_for_alpha(alpha/10, 1))^2;
@@ -89,11 +90,11 @@ for alpha = 10:10:120
     standard_dev_per_alpha(alpha/10, 1) = sqrt((1/N)*summation);
 end
 
-alpha = 10:10:120;
+alpha = 10:10:last_alpha;
 figure;
 errorbar(alpha, mse_for_alpha, standard_dev_per_alpha, 'LineWidth', 2) 
 xlabel('$\sigma^2$', 'Interpreter', 'latex');
-ylabel('MSE of $\sigma^2$', 'Interpreter', 'latex');
-title('MSE of $\sigma^2$ with Error Bars', 'Interpreter', 'latex');
-xlim([10 120]);
+ylabel('Avg MSE of $\sigma^2$', 'Interpreter', 'latex');
+title('Average MSE vs $\sigma^2$ with Standard Deviation of MSE', 'Interpreter', 'latex');
+xlim([10 last_alpha]);
 grid on;
