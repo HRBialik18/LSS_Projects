@@ -20,7 +20,7 @@ Gc = 10;
 st = upconvert(m, Gc, fs, fc, fh);
 
 w = rand(1, length(st));
-y1 = st + sqrt(0.01)*w; %chana good that I square-rooted the varriance?
+y1 = st + sqrt(0.01)*w;
 y2 = st + sqrt(0.1)*w;
 y3 = st + sqrt(1)*w;
 
