@@ -9,7 +9,7 @@ set(groot, 'defaultStemMarkerSize', 8);
 [audioData, fs] = audioread('oddity.wav');
 
 m = audioData(:, 1);
-m = m.'; %chana should I need to do this?
+m = m.';
 
 disp(["f_s", num2str(fs)]);
 
@@ -22,14 +22,14 @@ title('m(t) vs Time');
 grid on;
 
 % soundsc(m, fs);
-energy1 = sum((abs(m)).^2);
+energy1 = sum((abs(m)).^2)/fs;
 
 disp(["energy of m(t)", num2str(energy1)]);
 
 
 fh = 1e7;
 fc = 1310*1000;
-Gc = 10;
+Gc = 5;
 MessageSignalRF = resample(m, fh, fs);
 t = 0:1/fh:(1/fh)*(length(MessageSignalRF)-1); %chana two of the same thing
 % t = (0:length(MessageSignalRF)-1) / fh;
@@ -42,7 +42,7 @@ xlabel('Time (s)');
 ylabel('Upsampled m(t)');
 title('Upsampled m(t) vs Time');
 grid on;
-energy2 = sum((abs(MessageSignalRF)).^2);
+energy2 = sum((abs(MessageSignalRF)).^2)/fh;
 disp(["energy of Upsampled m(t)", num2str(energy2)]);
 
 figure;
@@ -51,7 +51,7 @@ xlabel('Time (s)');
 ylabel('s(t)');
 title('s(t) vs Time');
 grid on;
-energy3 = sum((abs(st)).^2);
+energy3 = sum((abs(st)).^2)/fh;
 disp(["energy of s(t)", num2str(energy3)]);
 
 % st = upconvert(m, Gc, fs, fc, fh);
